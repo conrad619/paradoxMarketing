@@ -1,17 +1,69 @@
+
 <!DOCTYPE html>
 <html>
 <head>
 	<title></title>
-	<style type="text/css" rel="style.css"></style>
+	<script src="js/jquery-3.4.0.js"></script>
+	<script src="js/jquery.validate.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 <body>
-	<div class="container">
-		<h1>Subscribe to our Newsletter</h1>
-		<form>
-			<input type="text" name="name">
-			<input type="email" name="email">
-			<input type="submit" name="" value="Subscribe">
-		</form>
+	<div class="wrap">
+		<div class="container">
+			<h1>Subscribe to our Newsletter</h1>
+			<form action="subscribe.php" method="post" id="subs_form">
+				<input type="text" name="name" placeholder="Name" class="inp name">
+				<input type="email" name="email" placeholder="Email" class="inp email">
+				<input type="submit" name="" value="Subscribe" class="subs">
+			</form>
+		</div>
 	</div>
+	<div id="subs_response">
+asdasd
+	</div>
+	<script type="text/javascript">
+
+		jQuery.validator.addMethod("lettersonly", function(value, element) {
+		  return this.optional(element) || /^[A-Za-z]+$/i.test(value);
+		}, "Letters only please"); 
+
+		$('#subs_form').submit(function(e) {
+		    e.preventDefault();
+		}).validate({
+			rules: {
+		      name: {
+		      	required:true,
+		      	lettersonly:true
+		      },
+		      email: {
+		        required: true,
+		        email: true
+		      }
+		    },
+		    // Specify validation error messages
+		    messages: {
+		      name: {
+		      	required:"Please enter your name",
+		      	lettersonly:"Letters only please"
+		      },
+		      email: "Please enter a valid email address"
+		    },
+		    submitHandler: function(form) {
+
+		        $.ajax({
+		            url: form.action,
+		            type: form.method,
+		            data: $(form).serialize(),
+		            success: function(response) {
+		                $('#subs_response').html(response);
+		                $('#subs_response').css("display","block");
+		                $('#subs_form')[0].reset();
+
+		                return false;
+		            }            
+		        });
+		    }
+		});
+	</script>
 </body>
 </html>
